@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/jquery/3.5.0/jquery.min.js"></script>
+</head>
+<body>
+    我的页面要渲染新闻列表
+    <div id="list">
+
+    </div>
+    <script>
+        //客户端发请求的工具
+        //用fetch向服务端发请求
+        //fetch是浏览器原生支持的方法
+        //fetch(url).then(callback) fetch语法
+        fetch('/news2').then((res)=>{
+            // console.log(res);
+            return res.json()
+        }).then((res)=>{
+            // console.log(res)
+            if(res.code === 200){//成功拿到了后端提供的数据
+                //把数组的数据渲染到list这个div里
+
+                var ul = $("<ul>") //创建ul对象，相当于createElement
+                res.data.list.forEach((item)=>{
+                    var li = $("<li>"+item+"</li>")
+                    ul.append(li);
+                })
+                $('#list').append(ul)
+            }
+        })
+    </script>
+    <!-- Promise成功之后的回调用.then() -->
+    <!-- fetch().then().then() 返回值是promise就可以一直.then() -->
+</body>
+</html>
