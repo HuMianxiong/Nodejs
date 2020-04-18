@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.bootcss.com/jquery/3.5.0/jquery.min.js"></script>
+    <script src="./javascripts/user.js"></script>
+    
+    <style>
+        ul,ol{
+            list-style: none;
+        }
+        ol li{
+            float: left;
+            width:30px;
+        }
+        .active{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <a href="/add.html">添加记录</a>
+    <div id="box"></div>
+    <script>
+        //getPageList() 获取当前页面的文档列表
+        function getPageList(page,pageSize){
+            //page 当前的页码 pageSize 当前的文档数
+            $("#box").html("") //把上次渲染的内容清除
+            $.get('/pagelist',{
+                page,pageSize
+            }).then((res)=>{
+                //res就是当前页面文档列表，是个数组
+                //res就是stu集合里的所有数据
+                if(res.code === 200){
+                    var ul = $('<ul>')
+                    res.data.list.forEach((item)=>{
+                        ul.append(
+                            $(`<li>${item.name} -- ${item.age}
+                                        <button class ='remove' data-id=${item._id}>删除</button>
+                                        <button class = 'update' data-id=${item._id}>修改</button>
+                                </li>`),
+                        );
+                    });
+                }
+                $("#box").append(ul);
+                //分页区
+                var ol = $("<ol>")//存放页码
+                console.log(res.data.count) //res.data.count总的页数
+                for(var i=1;i<=res.data.count;i++){
+                    console.log(typeof page,page,typeof i,i)
+                    console.log(page===i?'active':'')
+                    ol.append($(`<li class="page ${Number(page) === i?'active':''}" data-page=${i}>${i}</li>`))
+                }
+                $('#box').append(ol)
+            })
+        }
+        getPageList(1,2) //加载时显示第一页的内容
+        //删除按钮的功能 事件委托
+        $('#box').on('click','.remove',function(){
+            var id = $(this).attr('data-id') 
+            if(!confirm("确定要删除吗？")) return;//删除前用户选择确定才能删除
+            $.get('/remove',{
+                id:id
+            }).then((res)=>{
+                if(res.code === 200 && res.data.remove){
+                    //location.href = '/home.html'
+                    getPageList(1,2) //重新取得删除后的最新数据
+                }
+            })
+        })
+        //分页的处理 点击页码切换页面
+        $('#box').on('click',".page",function(){
+            var page = $(this).attr("data-page")//data-page的这个属性的值是字符串类型的
+            // console.log(page)
+            // console.log($(this).get(0).getAttribute("data-page"))
+            getPageList(page,2)
+            
+
+        })
+        //跳转到修改页面 并且把id传过去
+        $("#box").on("click",'.update',function(){
+            var id = $(this).attr('data-id');
+            location.href='/modify.html?id='+id
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+// {
+//     // 使用 IntelliSense 了解相关属性。 
+//     // 悬停以查看现有属性的描述。
+//     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+//     "version": "0.2.0",
+//     "configurations": [
+
+//         {
+//             "type": "node",
+//             "request": "launch",
+//             "name": "启动程序",
+//             "skipFiles": [
+//                 "<node_internals>/**"
+//             ],
+//             "program": "${workspaceFolder}\\debugger-test\\index.js"
+//         }
+//     ]
+// } 
+{
+
+    "version": "0.2.0",
+
+    "configurations": [
+
+        {
+
+            "name": "Launch",
+
+            "type": "node",
+
+            "request": "launch",
+
+            "program": "${workspaceFolder}\\debugger-test\\index.js", //这个配置成你要调试的文件
+
+            "stopOnEntry": false,
+
+            "args": [],
+
+           
+
+            "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+
+            "runtimeArgs": [
+
+                "--nolazy"
+
+            ],
+
+            "env": {
+
+                "NODE_ENV": "development"
+
+            },
+
+            "externalConsole": false,
+
+            "preLaunchTask": "",
+
+            "sourceMaps": false,
+
+            "outDir": null
+
+        },
+
+        {
+
+            "name": "Attach",
+
+            "type": "node",
+
+            "request": "attach",
+
+            "port": 5858
+
+        }
+
+    ]
+
+}

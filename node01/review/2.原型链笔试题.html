@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let F = function(){};
+        Object.prototype.a = function(){
+            console.log("a()");
+        };
+        Function.prototype.b = function(){
+            console.log("b()");
+        };
+        var f = new F();
+        F.a();//a()
+        F.b();//b()
+        f.a();//a()
+        console.log('f',f)
+        console.log(F instanceof Object)//true
+        console.log(F instanceof Function)//true
+        console.log(F.prototype)
+
+        console.log(f instanceof Object);//true
+        console.log(f instanceof F);//true
+        console.log(f instanceof Function)//false
+        console.log(f)
+        f.b();//f.b is not a function
+
+    </script>
+</body>
+</html>

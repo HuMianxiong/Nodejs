@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.bootcss.com/jquery/3.5.0/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <a href="/add.html">添加记录</a>
+    <div id="box"></div>
+    <script>
+        //getData() 的功能 读取stu集合里的所有数据
+        //实现一个删除前确认的功能
+        function getData(){
+            $('#box').html("")
+            $.get('/list').then((res)=>{
+                //res 就是stu集合里的所有数据
+                if(res.code === 200){
+                    var ul = $('<ul>')
+                    res.data.list.forEach((item)=>{
+                        ul.append(
+                            $(`<li>${item.name} -- ${item.age}
+                                <button class='remove' data-id=${item._id}>删除</button>
+                                <button class='update' data-id=${item._id}>修改</button>
+                                </li>`)
+                        )
+                    })
+                }
+                $('#box').append(ul);
+            })
+        }
+        getData()
+        //删除按钮功能 事件委托
+        $('#box').on('click','.remove',function(){
+            var id = $(this).attr('data-id')
+            if(!confirm('确定要删除吗？')) return //删除前用户选择确定才能删除
+            $.get('/remove',{
+                id:id
+            }).then((res)=>{
+                if(res.code === 200 && res.data.remove){
+                    getData() //重新取得删除后的最新数据 
+                }
+            })
+        })
+    </script>
+</body>
+</html>
