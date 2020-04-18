@@ -15,17 +15,19 @@ router.use(function(req,res,next){//拦截所有的请求
   if(req.url !== '/users/login' && req.url!== '/users/reg'){
     //进行令牌的验证
     console.log(req.url+'被拦截了...')
-    jsonwebtoken.verify(req.cookies.token,'haha',(err,code)=>{
+    console.log(req.session.str)
+    jsonwebtoken.verify(req.cookies.token,req.session.str,(err,code)=>{
+      console.log(err,code)
       if(!err){//通过了令牌验证
         console.log('通过了令牌验证',req.cookies.token)
         next()
       }
       else{//没有通过
         res.json({
-          code:200,
+          code:500,
           data:{
             valid:false,//valid是false表示验证没有通过
-            message:'error'//是为了方便客户端判断当前接口是否验证通过了
+            //message:'error'//是为了方便客户端判断当前接口是否验证通过了
           }
         })
       }

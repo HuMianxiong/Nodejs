@@ -51,10 +51,11 @@ router.post('/login',(req,res)=>{
   User.find({username,password}).then((result)=>{
     if(result.length>0){
       // console.log('111',username,password)
+      req.session.str = 'haha'
       req.session.username = username //把用户名存储在session里
       //产生一个令牌，发送到客户端cookie存储起来
       var token = jsonwebtoken.sign(
-        {username:username,time:Date.now()},"haha",{expiresIn:100000}
+        {username:username,time:Date.now()},req.session.str,{expiresIn:100000}//单位为秒
       )
       res.cookie('token',token)//服务端向客户端写入cookie
       res.json({
