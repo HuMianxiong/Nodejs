@@ -25,9 +25,40 @@ app.get('/test',(req,res)=>{
     }) //temp 就是views目录下的 ejs的模板文件名
 })
 
-// /news 显示百度焦点新闻的内容
-app.get("/news",(req,res)=>{
-    http.get("http://news.baidu.com",(response)=>{//response是一个流对象
+//得到新闻列表
+// function getNews(callback){
+//     http.get("http://news.baidu.com",(response)=>{//response是一个流对象
+//         response.setEncoding("utf-8")
+//         var str = "";
+//         response.on("data",(thunk)=>{//监听data事件，把每一块数据写入body里面
+//             str+=thunk;
+//         })
+//         response.on("end",()=>{
+            
+//             var $ = cheerio.load(str)//把字符串转为jq对象
+//             var list = ""//存储新闻列表的内容
+//             //获取焦点新闻列表元素，并把内容写入到文本文件里
+//             $(".focuslistnews a").each((index,item)=>{
+//                 list+=$(item).text()+"<br />"
+//             })
+//             // res.send(list);
+//             callback(list)
+//         })
+//     })
+// }
+
+// // /news 显示百度焦点新闻的内容
+// app.get("/news",(req,res)=>{
+//     getNews((data)=>{
+//         res.send(data)
+//     })
+// })
+
+
+
+function getNews(callback){
+    return new Promise((resolve)=>{
+        http.get("http://news.baidu.com",(response)=>{//response是一个流对象
         response.setEncoding("utf-8")
         var str = "";
         response.on("data",(thunk)=>{//监听data事件，把每一块数据写入body里面
@@ -41,10 +72,24 @@ app.get("/news",(req,res)=>{
             $(".focuslistnews a").each((index,item)=>{
                 list+=$(item).text()+"<br />"
             })
-            res.send(list);
+            // res.send(list);
+            resolve(list)
         })
     })
+    })
+    
+}
+// app.get('/news',(req,res)=>{
+//     getNews().then((data)=>{
+//         res.send(data)
+//     })
+// })
+
+app.get('/news',async (req,res)=>{
+    var data = await getNews();
+    res.send(data)
 })
+
 
 // /news 显示百度焦点新闻的内容
 app.get("/news2",(req,res)=>{//负责向前端提供数据
